@@ -1,0 +1,20 @@
+report = new com.openbravo.pos.reports.PanelReportBean();
+
+report.setTitleKey("Menu.CapturasInventario");
+report.setReport("/com/openbravo/reports/capturasInventario");
+report.setResourceBundle("com/openbravo/reports/ventasdetalle_messages");
+
+report.setSentence("SELECT PRODUCTS.CODE AS CODE,PRODUCTS.NAME AS NAME, STOCKDIARY.UNITS/STOCKDIARY.UNIDADES AS UNIDADES, CASE WHEN REASON='1' THEN '+compra' WHEN REASON='2' THEN '+devolucion' WHEN REASON='3' THEN '+traspaso' WHEN REASON='4' THEN '+traspaso' WHEN REASON='-1' THEN '-venta' WHEN REASON='-2' THEN '-devolucion' WHEN REASON='-3' THEN '-salida' WHEN REASON='-4' THEN '-traspaso' ELSE '' END AS REASON, STOCKDIARY.DATENEW AS FECHA, LOCATIONS.NAME AS SUCURSAL, CONCAT(CASE WHEN STOCKDIARY.PRESENTACION=0 THEN 'PIEZA' WHEN STOCKDIARY.PRESENTACION=1 THEN 'SERIE' WHEN STOCKDIARY.PRESENTACION=2 THEN 'PAQUETE' WHEN STOCKDIARY.PRESENTACION=3 THEN 'CAJA' ELSE '' END,'(',CAST(STOCKDIARY.UNIDADES AS CHAR(10)),')') AS PRESENTACION FROM PRODUCTS INNER JOIN STOCKDIARY ON STOCKDIARY.PRODUCT = PRODUCTS.ID INNER JOIN LOCATIONS ON LOCATIONS.ID=STOCKDIARY.LOCATION WHERE ?(QBF_FILTER) AND STOCKDIARY.REASON>0 ORDER BY STOCKDIARY.DATENEW");
+
+report.addParameter("STOCKDIARY.UUID");
+report.addQBFFilter(new com.openbravo.pos.reports.JParamsComboCapturas());
+
+report.addField("CODE", com.openbravo.data.loader.Datas.STRING);
+report.addField("NAME", com.openbravo.data.loader.Datas.STRING);
+report.addField("UNIDADES", com.openbravo.data.loader.Datas.INT);
+report.addField("REASON", com.openbravo.data.loader.Datas.STRING);
+report.addField("FECHA", com.openbravo.data.loader.Datas.TIMESTAMP);
+report.addField("SUCURSAL", com.openbravo.data.loader.Datas.STRING);
+report.addField("PRESENTACION", com.openbravo.data.loader.Datas.STRING);
+
+report;
