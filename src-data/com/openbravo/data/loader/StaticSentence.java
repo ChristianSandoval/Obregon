@@ -29,7 +29,7 @@ import java.util.logging.Logger;
  */
 public class StaticSentence extends JDBCSentence {
 
-    //private static Logger logger = Logger.getLogger("com.openbravo.data.loader.StaticSentence");
+    private static Logger logger = Logger.getLogger("com.openbravo.data.loader.StaticSentence");
     
     private ISQLBuilderStatic m_sentence;
     protected SerializerWrite m_SerWrite = null;
@@ -83,7 +83,7 @@ public class StaticSentence extends JDBCSentence {
 
             String sentence = m_sentence.getSQL(m_SerWrite, params);
             
-            //logger.info("Executing static SQL: " + sentence);
+            logger.info("Executing static SQL: " + sentence);
 
             if (m_Stmt.execute(sentence)) {
                 return new JDBCDataResultSet(m_Stmt.getResultSet(), m_SerRead);

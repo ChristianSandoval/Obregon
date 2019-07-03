@@ -382,6 +382,7 @@ public abstract class JPanelTicket extends JPanel implements JPanelView, BeanFac
             presentacion.setSelectedIndex(oLine.getPresentacion());
             mensajeList.add(presentacion);
 
+            /*
             mensajeList.add(new JLabel("Precio: "));
             JComboBox precio = new JComboBox();
             precio.addItem("Pieza: "+Formats.CURRENCY.formatValue(prod.getPriceSell()));
@@ -390,7 +391,7 @@ public abstract class JPanelTicket extends JPanel implements JPanelView, BeanFac
             precio.addItem("Caja: "+Formats.CURRENCY.formatValue(prod.getPriceSell4()));
             precio.setSelectedIndex(oLine.getListaPrecio());
             mensajeList.add(precio);
-
+            */
             Object[] objetosList2 = mensajeList.toArray();
             String[] opciones2 = {"Aceptar", "Cancelar"};
             objetosList2 = mensajeList.toArray();
@@ -399,48 +400,38 @@ public abstract class JPanelTicket extends JPanel implements JPanelView, BeanFac
                 oLine.setMultiply(Double.parseDouble(cantidad.getText()));
                 switch (presentacion.getSelectedIndex()) {
                     case 0:
-                        oLine.setUnidades(prod.getUnidades());
-                        oLine.setProperty("cant", oLine.getMultiply()>1?oLine.printMultiply()+" PIEZAS":cantidad.getText()+" PIEZA");
-                        break;
-                    case 1:
-                        oLine.setUnidades(prod.getUnidades2());
-                        oLine.setProperty("cant", oLine.getMultiply()>1?oLine.printMultiply()+" SERIES":cantidad.getText()+" SERIE");
-                        break;
-                    case 2:
-                        oLine.setUnidades(prod.getUnidades3());
-                        oLine.setProperty("cant", oLine.getMultiply()>1?oLine.printMultiply()+" PAQUETES":cantidad.getText()+" PAQUETE");
-                        break;
-                    case 3:
-                        oLine.setUnidades(prod.getUnidades4());
-                        oLine.setProperty("cant", oLine.getMultiply()>1?oLine.printMultiply()+" CAJAS":cantidad.getText()+" CAJA");
-                        break;
-                }
-                switch (precio.getSelectedIndex()) {
-                    case 0:
                         oLine.setPrice(prod.getPriceSell()*oLine.getUnidades());
                         oLine.setProperty("descripcion", prod.getName()+" "+oLine.getUnidades()+" Pz");
                         oLine.setProperty("precioPieza", Formats.CURRENCY.formatValue(prod.getPriceSell()));
+                        oLine.setUnidades(prod.getUnidades());
+                        oLine.setProperty("cant", oLine.getMultiply()>1?oLine.printMultiply()+" PIEZAS":cantidad.getText()+" PIEZA");
                         break;
                     case 1:
                         oLine.setPrice(prod.getPriceSell2()*oLine.getUnidades());
                         oLine.setProperty("descripcion", prod.getName()+" "+oLine.getUnidades()+" Pz/SERIE");
                         oLine.setProperty("precioPieza", Formats.CURRENCY.formatValue(prod.getPriceSell2()));
+                        oLine.setUnidades(prod.getUnidades2());
+                        oLine.setProperty("cant", oLine.getMultiply()>1?oLine.printMultiply()+" SERIES":cantidad.getText()+" SERIE");
                         break;
                     case 2:
                         oLine.setPrice(prod.getPriceSell3()*oLine.getUnidades());
                         oLine.setProperty("descripcion", prod.getName()+" "+oLine.getUnidades()+" Pz/PAQUETE");
                         oLine.setProperty("precioPieza", Formats.CURRENCY.formatValue(prod.getPriceSell3()));
+                        oLine.setUnidades(prod.getUnidades3());
+                        oLine.setProperty("cant", oLine.getMultiply()>1?oLine.printMultiply()+" PAQUETES":cantidad.getText()+" PAQUETE");
                         break;
                     case 3:
                         oLine.setPrice(prod.getPriceSell4()*oLine.getUnidades());
                         oLine.setProperty("descripcion", prod.getName()+" "+oLine.getUnidades()+" Pz/CAJA");
                         oLine.setProperty("precioPieza", Formats.CURRENCY.formatValue(prod.getPriceSell4()));
+                        oLine.setUnidades(prod.getUnidades4());
+                        oLine.setProperty("cant", oLine.getMultiply()>1?oLine.printMultiply()+" CAJAS":cantidad.getText()+" CAJA");
                         break;
                 }
-                oLine.setListaPrecio(precio.getSelectedIndex());
+                oLine.setListaPrecio(presentacion.getSelectedIndex());
                 oLine.setPresentacion(presentacion.getSelectedIndex());
                 oLine.setProperty("codigo", prod.getReference());
-                oLine.setProperty("precio", precio.getSelectedItem().toString());
+                oLine.setProperty("precio", presentacion.getSelectedItem().toString());
                 oLine.setProperty("presentacion", presentacion.getSelectedItem().toString());
                 oLine.setProperty("piezas",Formats.INT.formatValue(oLine.getMultiply()*oLine.getUnidades()));
                 oLine.setProperty("importe",oLine.printValue());
@@ -454,12 +445,23 @@ public abstract class JPanelTicket extends JPanel implements JPanelView, BeanFac
     }
     
     protected void addTicketLine(TicketLineInfo oLine) {
-        if(m_oTicket.getTicketType()==TicketInfo.RECEIPT_NORMAL)
+        if(oLine.isProductCom()&&m_oTicket.getTicketType()==TicketInfo.RECEIPT_NORMAL)
         {
             oLine = opcionesLinea(oLine);
         }
         if(oLine!=null)
         {
+            if(!oLine.isProductCom()&&m_oTicket.getTicketType()==TicketInfo.RECEIPT_NORMAL)
+            {
+                try {
+                    ProductInfoExt prod = dlSales.getProductInfo(oLine.getProductID());
+                    oLine.setProperty("descripcion", prod.getName()+" "+oLine.getUnidades()+" Pz");
+                    oLine.setProperty("precioPieza", Formats.CURRENCY.formatValue(prod.getPriceSell()));
+                    oLine.setProperty("cant", oLine.getMultiply()>1?oLine.printMultiply()+" PIEZAS": "1 PZA");
+                } catch (BasicException ex) {
+                    Logger.getLogger(JPanelTicket.class.getName()).log(Level.SEVERE, null, ex);
+                }
+            }
             m_oTicket.addLine(oLine);
             m_ticketlines.addTicketLine(oLine); // Pintamos la linea en la vista... 
         }  
@@ -686,6 +688,11 @@ public abstract class JPanelTicket extends JPanel implements JPanelView, BeanFac
             m_oTicket.setProperty("campo3", config.getProperty("campo3"));
             m_oTicket.setProperty("campo4", config.getProperty("campo4"));
             for (int i = 0; i < m_oTicket.getLinesCount(); i++) {
+                if(m_oTicket.getLine(i).getPrice()==0.00)
+                {
+                    JOptionPane.showMessageDialog(this, "NO puedes vender productos que no tengan un precio definido.");
+                    return false;
+                }
                 try {
                     //System.out.println("unidadesTicket:"+m_oTicket.getLine(i).getUnidades());
                     double units = dlSales.findProductStock(m_App.getInventoryLocation(), m_oTicket.getLine(i).getProductID(), null);
@@ -1519,10 +1526,25 @@ public abstract class JPanelTicket extends JPanel implements JPanelView, BeanFac
         if (i < 0) {
             Toolkit.getDefaultToolkit().beep(); // no line selected
         } else {
-                TicketLineInfo newline = opcionesLinea(m_oTicket.getLine(i));
-                if (newline != null) {
+                if(m_oTicket.getLine(i).isProductCom())
+                {
+                    TicketLineInfo newline = opcionesLinea(m_oTicket.getLine(i));
+                    if (newline != null) {
                     // line has been modified
                     paintTicketLine(i, newline);
+                    }
+                }
+                else
+                {
+                    try {
+                        TicketLineInfo newline = JProductLineEdit.showMessage(this, m_App, m_oTicket.getLine(i));
+                        if (newline != null) {
+                            // line has been modified
+                            paintTicketLine(i, newline);
+                        }
+                    } catch (BasicException e) {
+                        new MessageInf(e).show(this);
+                    }
                 }
         }
 

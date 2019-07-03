@@ -103,7 +103,7 @@ public class ProductsEditor extends JPanel implements EditorRecord {
         m_jRef.getDocument().addDocumentListener(dirty);
         m_jCode.getDocument().addDocumentListener(dirty);
         m_jName.getDocument().addDocumentListener(dirty);
-        m_jComment.addActionListener(dirty);
+        m_jComment1.addActionListener(dirty);
         m_jScale.addActionListener(dirty);
         m_jCategory.addActionListener(dirty);
         m_jTax.addActionListener(dirty);
@@ -191,7 +191,7 @@ this.m_jCant1.getDocument().addDocumentListener(dirty);
         m_jRef.setText(null);
         m_jCode.setText(null);
         m_jName.setText(null);
-        m_jComment.setSelected(false);
+        m_jComment1.setSelected(false);
         m_jScale.setSelected(false);
         m_CategoryModel.setSelectedKey(null);
         taxcatmodel.setSelectedKey(null);
@@ -217,14 +217,15 @@ this.m_jCant1.getDocument().addDocumentListener(dirty);
         m_jRef.setEnabled(false);
         m_jCode.setEnabled(false);
         m_jName.setEnabled(false);
-        m_jComment.setEnabled(false);
+        m_jComment1.setEnabled(false);
         m_jScale.setEnabled(false);
         m_jCategory.setEnabled(false);
         m_jTax.setEnabled(false);
         m_jAtt.setEnabled(false);
-        if(!app.getAppUserView().getUser().getRole().equals("0"))
+        /*if(!app.getAppUserView().getUser().getRole().equals("0"))
             m_jPriceBuy.setVisible(false);
-        else m_jPriceBuy.setVisible(true);
+        else */
+        m_jPriceBuy.setVisible(true);
         
         m_jPriceBuy.setEnabled(false);
         m_jPriceSell.setEnabled(false);
@@ -249,16 +250,16 @@ this.m_jCant1.getDocument().addDocumentListener(dirty);
         m_jRef.setText(null);
         m_jCode.setText(null);
         m_jName.setText(null);
-        m_jComment.setSelected(false);
+        m_jComment1.setSelected(false);
         m_jScale.setSelected(false);
         m_CategoryModel.setSelectedKey("000");
         taxcatmodel.setSelectedKey(null);
         attmodel.setSelectedKey(null);
         m_jPriceBuy.setText("0.00");
-        m_jPriceSell.setText(null);                    
-        m_jPriceSell2.setText(null);
-        m_jPriceSell3.setText(null);
-        m_jPriceSell4.setText(null);
+        m_jPriceSell.setText("0.00");                    
+        m_jPriceSell2.setText("0.00");
+        m_jPriceSell3.setText("0.00");
+        m_jPriceSell4.setText("0.00");
         m_jCantidad.setText("1");                    
         m_jCantidad2.setText("24");
         m_jCantidad3.setText("6");
@@ -271,15 +272,16 @@ this.m_jCant1.getDocument().addDocumentListener(dirty);
         txtAttributes.setText(null);
         reportlock = false;
         
-        if(!app.getAppUserView().getUser().getRole().equals("0"))
-            m_jPriceBuy.setVisible(false);
-        else m_jPriceBuy.setVisible(true);
+        //if(!app.getAppUserView().getUser().getRole().equals("0"))
+            //m_jPriceBuy.setVisible(false);
+        //else 
+        m_jPriceBuy.setVisible(true);
         
         // Los habilitados
         m_jRef.setEnabled(true);
         m_jCode.setEnabled(true);
         m_jName.setEnabled(true);
-        m_jComment.setEnabled(true);
+        m_jComment1.setEnabled(true);
         m_jScale.setEnabled(true);
         m_jCategory.setEnabled(true);
         m_jTax.setEnabled(true);
@@ -304,9 +306,10 @@ this.m_jCant1.getDocument().addDocumentListener(dirty);
    }
     
     public void writeValueDelete(Object value) {
-        if(!app.getAppUserView().getUser().getRole().equals("0"))
+        /*if(!app.getAppUserView().getUser().getRole().equals("0"))
             m_jPriceBuy.setVisible(false);
-        else m_jPriceBuy.setVisible(true);
+        else 
+            */m_jPriceBuy.setVisible(true);
         reportlock = true;       
         Object[] myprod = (Object[]) value;
         m_jTitle.setText(Formats.STRING.formatValue(myprod[1]) + " - " + Formats.STRING.formatValue(myprod[3]) + " " + AppLocal.getIntString("label.recorddeleted"));
@@ -314,7 +317,7 @@ this.m_jCant1.getDocument().addDocumentListener(dirty);
         m_jRef.setText(Formats.STRING.formatValue(myprod[1]));
         m_jCode.setText(Formats.STRING.formatValue(myprod[1]));
         m_jName.setText(Formats.STRING.formatValue(myprod[3]));
-        m_jComment.setSelected(((Boolean)myprod[4]).booleanValue());
+        m_jComment1.setSelected(((Boolean)myprod[4]).booleanValue());
         m_jScale.setSelected(((Boolean)myprod[5]).booleanValue());
         m_jPriceBuy.setText(Formats.CURRENCY.formatValue(myprod[6]));
         
@@ -342,7 +345,7 @@ this.m_jCant1.getDocument().addDocumentListener(dirty);
         m_jRef.setEnabled(false);
         m_jCode.setEnabled(false);
         m_jName.setEnabled(false);
-        m_jComment.setEnabled(false);
+        m_jComment1.setEnabled(false);
         m_jScale.setEnabled(false);
         m_jCategory.setEnabled(false);
         m_jTax.setEnabled(false);
@@ -367,9 +370,10 @@ this.m_jCant1.getDocument().addDocumentListener(dirty);
     }    
     
     public void writeValueEdit(Object value) {
-        if(!app.getAppUserView().getUser().getRole().equals("0"))
+        /*if(!app.getAppUserView().getUser().getRole().equals("0"))
             m_jPriceBuy.setVisible(false);
-        else m_jPriceBuy.setVisible(true);
+        else 
+            */m_jPriceBuy.setVisible(true);
         reportlock = true;
         Object[] myprod = (Object[]) value;
         m_jTitle.setText(Formats.STRING.formatValue(myprod[1]) + " - " + Formats.STRING.formatValue(myprod[3]));
@@ -377,7 +381,7 @@ this.m_jCant1.getDocument().addDocumentListener(dirty);
         m_jRef.setText(Formats.STRING.formatValue(myprod[1]));
         m_jCode.setText(Formats.STRING.formatValue(myprod[1]));
         m_jName.setText(Formats.STRING.formatValue(myprod[3]));
-        m_jComment.setSelected(((Boolean)myprod[4]).booleanValue());
+        m_jComment1.setSelected(((Boolean)myprod[4]).booleanValue());
         m_jScale.setSelected(((Boolean)myprod[5]).booleanValue());
         m_jPriceBuy.setText(Formats.CURRENCY.formatValue(myprod[6]));
         m_jPriceSell.setText(Formats.CURRENCY.formatValue(myprod[7]));
@@ -405,7 +409,7 @@ this.m_jCant1.getDocument().addDocumentListener(dirty);
         m_jRef.setEnabled(true);
         m_jCode.setEnabled(true);
         m_jName.setEnabled(true);
-        m_jComment.setEnabled(true);
+        m_jComment1.setEnabled(true);
         m_jScale.setEnabled(true);
         m_jCategory.setEnabled(true);
         m_jTax.setEnabled(true);
@@ -430,15 +434,16 @@ this.m_jCant1.getDocument().addDocumentListener(dirty);
     }   
 
     public Object createValue() throws BasicException {
-        if(!app.getAppUserView().getUser().getRole().equals("0"))
+        /*if(!app.getAppUserView().getUser().getRole().equals("0"))
             m_jPriceBuy.setVisible(false);
-        else m_jPriceBuy.setVisible(true);
+        else */
+        m_jPriceBuy.setVisible(true);
         Object[] myprod = new Object[24];
         myprod[0] = m_id;
         myprod[1] = m_jRef.getText();
         myprod[2] = m_jRef.getText();
         myprod[3] = m_jName.getText();
-        myprod[4] = Boolean.valueOf(m_jComment.isSelected());
+        myprod[4] = Boolean.valueOf(m_jComment1.isSelected());
         myprod[5] = Boolean.valueOf(m_jScale.isSelected());
         myprod[6] = Formats.CURRENCY.parseValue(m_jPriceBuy.getText());
         myprod[7] = Formats.CURRENCY.parseValue(m_jPriceSell.getText());;
@@ -786,6 +791,7 @@ this.m_jCant1.getDocument().addDocumentListener(dirty);
         m_jProd24 = new javax.swing.JTextField();
         jButton24 = new javax.swing.JButton();
         jButton25 = new javax.swing.JButton();
+        m_jImage = new com.openbravo.data.gui.JImageEditor();
         jLabel1 = new javax.swing.JLabel();
         jLabel2 = new javax.swing.JLabel();
         m_jRef = new javax.swing.JTextField();
@@ -793,7 +799,6 @@ this.m_jCant1.getDocument().addDocumentListener(dirty);
         m_jTitle = new javax.swing.JLabel();
         jTabbedPane1 = new javax.swing.JTabbedPane();
         jPanel1 = new javax.swing.JPanel();
-        m_jImage = new com.openbravo.data.gui.JImageEditor();
         jLabel3 = new javax.swing.JLabel();
         m_jPriceBuy = new javax.swing.JTextField();
         jLabel4 = new javax.swing.JLabel();
@@ -812,6 +817,8 @@ this.m_jCant1.getDocument().addDocumentListener(dirty);
         m_jCantidad2 = new javax.swing.JTextField();
         m_jCantidad3 = new javax.swing.JTextField();
         m_jCantidad4 = new javax.swing.JTextField();
+        jLabel27 = new javax.swing.JLabel();
+        m_jComment1 = new javax.swing.JCheckBox();
 
         jLabel6.setText(AppLocal.getIntString("label.prodbarcode")); // NOI18N
 
@@ -1372,8 +1379,6 @@ this.m_jCant1.getDocument().addDocumentListener(dirty);
         m_jTitle.setBounds(10, 10, 560, 30);
 
         jPanel1.setLayout(null);
-        jPanel1.add(m_jImage);
-        m_jImage.setBounds(340, 20, 200, 180);
 
         jLabel3.setText(AppLocal.getIntString("label.prodpricebuy")); // NOI18N
         jPanel1.add(jLabel3);
@@ -1435,19 +1440,31 @@ this.m_jCant1.getDocument().addDocumentListener(dirty);
 
         m_jCantidad.setHorizontalAlignment(javax.swing.JTextField.RIGHT);
         jPanel1.add(m_jCantidad);
-        m_jCantidad.setBounds(250, 40, 80, 20);
+        m_jCantidad.setBounds(250, 40, 40, 20);
 
         m_jCantidad2.setHorizontalAlignment(javax.swing.JTextField.RIGHT);
         jPanel1.add(m_jCantidad2);
-        m_jCantidad2.setBounds(250, 70, 80, 20);
+        m_jCantidad2.setBounds(250, 70, 40, 20);
 
         m_jCantidad3.setHorizontalAlignment(javax.swing.JTextField.RIGHT);
         jPanel1.add(m_jCantidad3);
-        m_jCantidad3.setBounds(250, 100, 80, 20);
+        m_jCantidad3.setBounds(250, 100, 40, 20);
 
         m_jCantidad4.setHorizontalAlignment(javax.swing.JTextField.RIGHT);
         jPanel1.add(m_jCantidad4);
-        m_jCantidad4.setBounds(250, 130, 80, 20);
+        m_jCantidad4.setBounds(250, 130, 40, 20);
+
+        jLabel27.setText("Mostrar opciones?");
+        jPanel1.add(jLabel27);
+        jLabel27.setBounds(10, 220, 150, 14);
+
+        m_jComment1.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                m_jComment1ActionPerformed(evt);
+            }
+        });
+        jPanel1.add(m_jComment1);
+        m_jComment1.setBounds(160, 220, 50, 21);
 
         jTabbedPane1.addTab(AppLocal.getIntString("label.prodgeneral"), jPanel1); // NOI18N
 
@@ -1945,6 +1962,10 @@ this.prod14 = JProductFinder.showMessage(this, this.dlSales);
     }         // TODO add your handling code here:
     }//GEN-LAST:event_jButton25ActionPerformed
 
+    private void m_jComment1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_m_jComment1ActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_m_jComment1ActionPerformed
+
     
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton jButton1;
@@ -1990,6 +2011,7 @@ this.prod14 = JProductFinder.showMessage(this, this.dlSales);
     private javax.swing.JLabel jLabel24;
     private javax.swing.JLabel jLabel25;
     private javax.swing.JLabel jLabel26;
+    private javax.swing.JLabel jLabel27;
     private javax.swing.JLabel jLabel3;
     private javax.swing.JLabel jLabel4;
     private javax.swing.JLabel jLabel5;
@@ -2041,6 +2063,7 @@ this.prod14 = JProductFinder.showMessage(this, this.dlSales);
     private javax.swing.JTextField m_jCode;
     private javax.swing.JComboBox m_jCodetype;
     private javax.swing.JCheckBox m_jComment;
+    private javax.swing.JCheckBox m_jComment1;
     private com.openbravo.data.gui.JImageEditor m_jImage;
     private com.openbravo.data.gui.JImageEditor m_jImage1;
     private javax.swing.JCheckBox m_jInCatalog;

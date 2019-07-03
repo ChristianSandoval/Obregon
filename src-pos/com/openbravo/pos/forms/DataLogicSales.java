@@ -28,6 +28,7 @@ import com.openbravo.pos.payment.PaymentInfoTicket;
 import com.openbravo.pos.ticket.FindTicketsInfo;
 import com.openbravo.pos.ticket.TicketTaxInfo;
 import java.io.ByteArrayOutputStream;
+import java.io.File;
 import java.io.IOException;
 import java.sql.SQLException;
 import java.util.Enumeration;
@@ -130,8 +131,10 @@ public CustomerInfoExt findCustomerExtById(String id)
 
     // Catalogo de productos
     public final List<CategoryInfo> getRootCategories() throws BasicException {
+        AppConfig config = new AppConfig(new File(System.getProperty("user.home") + File.separator + "openbravopos.properties"));
+        config.load();
         return new PreparedSentence(s
-            , "SELECT ID, NAME, IMAGE FROM CATEGORIES WHERE PARENTID IS NULL ORDER BY NAME"
+            , "SELECT ID, NAME, IMAGE FROM CATEGORIES WHERE PARENTID IS NULL AND ID IN ("+config.getProperty("categoria")+") ORDER BY NAME"
             , null
             , CategoryInfo.getSerializerRead()).list();
     }
@@ -163,30 +166,36 @@ public CustomerInfoExt findCustomerExtById(String id)
   
     // Products list
     public final SentenceList getProductList() {
+        AppConfig config = new AppConfig(new File(System.getProperty("user.home") + File.separator + "openbravopos.properties"));
+        config.load();
         return new StaticSentence(s
             , new QBFBuilder(
               "SELECT ID, REFERENCE, CODE, NAME, ISCOM, ISSCALE, PRICEBUY, PRICESELL, TAXCAT, CATEGORY, ATTRIBUTESET_ID, IMAGE, ATTRIBUTES,STOCKVOLUME, PRICESELL2, PRICESELL3, PRICESELL4, UNIDADES, UNIDADES2, UNIDADES3, UNIDADES4 " +
-              "FROM PRODUCTS WHERE ?(QBF_FILTER) ORDER BY PRICESELL", new String[] {"NAME", "PRICEBUY", "PRICESELL", "CATEGORY", "CODE"})
+              "FROM PRODUCTS WHERE ?(QBF_FILTER) AND CATEGORY IN ("+config.getProperty("categoria")+") ORDER BY PRICESELL", new String[] {"NAME", "PRICEBUY", "PRICESELL", "CATEGORY", "CODE"})
             , new SerializerWriteBasic(new Datas[] {Datas.OBJECT, Datas.STRING, Datas.OBJECT, Datas.DOUBLE, Datas.OBJECT, Datas.DOUBLE, Datas.OBJECT, Datas.STRING, Datas.OBJECT, Datas.STRING})
             , ProductInfoExt.getSerializerRead());
     }
     
     // Products list
     public SentenceList getProductListNormal() {
+        AppConfig config = new AppConfig(new File(System.getProperty("user.home") + File.separator + "openbravopos.properties"));
+        config.load();
         return new StaticSentence(s
             , new QBFBuilder(
               "SELECT ID, REFERENCE, CODE, NAME, ISCOM, ISSCALE, PRICEBUY, PRICESELL, TAXCAT, CATEGORY, ATTRIBUTESET_ID, IMAGE, ATTRIBUTES,STOCKVOLUME, PRICESELL2, PRICESELL3, PRICESELL4, UNIDADES, UNIDADES2, UNIDADES3, UNIDADES4 " +
-              "FROM PRODUCTS WHERE ISCOM = " + s.DB.FALSE() + " AND ?(QBF_FILTER) ORDER BY PRICESELL", new String[] {"NAME", "PRICEBUY", "PRICESELL", "CATEGORY", "CODE"})
+              "FROM PRODUCTS WHERE ?(QBF_FILTER) AND CATEGORY IN ("+config.getProperty("categoria")+") ORDER BY PRICESELL", new String[] {"NAME", "PRICEBUY", "PRICESELL", "CATEGORY", "CODE"})
             , new SerializerWriteBasic(new Datas[] {Datas.OBJECT, Datas.STRING, Datas.OBJECT, Datas.DOUBLE, Datas.OBJECT, Datas.DOUBLE, Datas.OBJECT, Datas.STRING, Datas.OBJECT, Datas.STRING})
             , ProductInfoExt.getSerializerRead());
     }
     
     //Auxiliar list for a filter
     public SentenceList getProductListAuxiliar() {
+        AppConfig config = new AppConfig(new File(System.getProperty("user.home") + File.separator + "openbravopos.properties"));
+        config.load();
          return new StaticSentence(s
             , new QBFBuilder(
               "SELECT ID, REFERENCE, CODE, NAME, ISCOM, ISSCALE, PRICEBUY, PRICESELL, TAXCAT, CATEGORY, ATTRIBUTESET_ID, IMAGE, ATTRIBUTES,STOCKVOLUME, PRICESELL2, PRICESELL3, PRICESELL4, UNIDADES, UNIDADES2, UNIDADES3, UNIDADES4 " +
-              "FROM PRODUCTS WHERE ISCOM = " + s.DB.TRUE() + " AND ?(QBF_FILTER) ORDER BY REFERENCE", new String[] {"NAME", "PRICEBUY", "PRICESELL", "CATEGORY", "CODE"})
+              "FROM PRODUCTS WHERE ?(QBF_FILTER) AND CATEGORY IN ("+config.getProperty("categoria")+") ORDER BY REFERENCE", new String[] {"NAME", "PRICEBUY", "PRICESELL", "CATEGORY", "CODE"})
             , new SerializerWriteBasic(new Datas[] {Datas.OBJECT, Datas.STRING, Datas.OBJECT, Datas.DOUBLE, Datas.OBJECT, Datas.DOUBLE, Datas.OBJECT, Datas.STRING, Datas.OBJECT, Datas.STRING})
             , ProductInfoExt.getSerializerRead());
     }
