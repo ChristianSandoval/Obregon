@@ -382,16 +382,15 @@ public abstract class JPanelTicket extends JPanel implements JPanelView, BeanFac
             presentacion.setSelectedIndex(oLine.getPresentacion());
             mensajeList.add(presentacion);
 
-            /*
-            mensajeList.add(new JLabel("Precio: "));
+            //mensajeList.add(new JLabel("Precio: "));
             JComboBox precio = new JComboBox();
             precio.addItem("Pieza: "+Formats.CURRENCY.formatValue(prod.getPriceSell()));
             precio.addItem("Serie: "+Formats.CURRENCY.formatValue(prod.getPriceSell2()));
             precio.addItem("Paquete: "+Formats.CURRENCY.formatValue(prod.getPriceSell3()));
             precio.addItem("Caja: "+Formats.CURRENCY.formatValue(prod.getPriceSell4()));
             precio.setSelectedIndex(oLine.getListaPrecio());
-            mensajeList.add(precio);
-            */
+            //mensajeList.add(precio);
+
             Object[] objetosList2 = mensajeList.toArray();
             String[] opciones2 = {"Aceptar", "Cancelar"};
             objetosList2 = mensajeList.toArray();
@@ -400,38 +399,49 @@ public abstract class JPanelTicket extends JPanel implements JPanelView, BeanFac
                 oLine.setMultiply(Double.parseDouble(cantidad.getText()));
                 switch (presentacion.getSelectedIndex()) {
                     case 0:
+                        oLine.setUnidades(prod.getUnidades());
+                        oLine.setProperty("cant", oLine.getMultiply()>1?oLine.printMultiply()+" PIEZAS":cantidad.getText()+" PIEZA");
+                        break;
+                    case 1:
+                        oLine.setUnidades(prod.getUnidades2());
+                        oLine.setProperty("cant", oLine.getMultiply()>1?oLine.printMultiply()+" SERIES":cantidad.getText()+" SERIE");
+                        break;
+                    case 2:
+                        oLine.setUnidades(prod.getUnidades3());
+                        oLine.setProperty("cant", oLine.getMultiply()>1?oLine.printMultiply()+" PAQUETES":cantidad.getText()+" PAQUETE");
+                        break;
+                    case 3:
+                        oLine.setUnidades(prod.getUnidades4());
+                        oLine.setProperty("cant", oLine.getMultiply()>1?oLine.printMultiply()+" CAJAS":cantidad.getText()+" CAJA");
+                        break;
+                }
+                precio.setSelectedIndex(presentacion.getSelectedIndex());
+                switch (precio.getSelectedIndex()) {
+                    case 0:
                         oLine.setPrice(prod.getPriceSell()*oLine.getUnidades());
                         oLine.setProperty("descripcion", prod.getName()+" "+oLine.getUnidades()+" Pz");
                         oLine.setProperty("precioPieza", Formats.CURRENCY.formatValue(prod.getPriceSell()));
-                        oLine.setUnidades(prod.getUnidades());
-                        oLine.setProperty("cant", oLine.getMultiply()>1?oLine.printMultiply()+" PIEZAS":cantidad.getText()+" PIEZA");
                         break;
                     case 1:
                         oLine.setPrice(prod.getPriceSell2()*oLine.getUnidades());
                         oLine.setProperty("descripcion", prod.getName()+" "+oLine.getUnidades()+" Pz/SERIE");
                         oLine.setProperty("precioPieza", Formats.CURRENCY.formatValue(prod.getPriceSell2()));
-                        oLine.setUnidades(prod.getUnidades2());
-                        oLine.setProperty("cant", oLine.getMultiply()>1?oLine.printMultiply()+" SERIES":cantidad.getText()+" SERIE");
                         break;
                     case 2:
                         oLine.setPrice(prod.getPriceSell3()*oLine.getUnidades());
                         oLine.setProperty("descripcion", prod.getName()+" "+oLine.getUnidades()+" Pz/PAQUETE");
                         oLine.setProperty("precioPieza", Formats.CURRENCY.formatValue(prod.getPriceSell3()));
-                        oLine.setUnidades(prod.getUnidades3());
-                        oLine.setProperty("cant", oLine.getMultiply()>1?oLine.printMultiply()+" PAQUETES":cantidad.getText()+" PAQUETE");
                         break;
                     case 3:
                         oLine.setPrice(prod.getPriceSell4()*oLine.getUnidades());
                         oLine.setProperty("descripcion", prod.getName()+" "+oLine.getUnidades()+" Pz/CAJA");
                         oLine.setProperty("precioPieza", Formats.CURRENCY.formatValue(prod.getPriceSell4()));
-                        oLine.setUnidades(prod.getUnidades4());
-                        oLine.setProperty("cant", oLine.getMultiply()>1?oLine.printMultiply()+" CAJAS":cantidad.getText()+" CAJA");
                         break;
                 }
-                oLine.setListaPrecio(presentacion.getSelectedIndex());
+                oLine.setListaPrecio(precio.getSelectedIndex());
                 oLine.setPresentacion(presentacion.getSelectedIndex());
                 oLine.setProperty("codigo", prod.getReference());
-                oLine.setProperty("precio", presentacion.getSelectedItem().toString());
+                oLine.setProperty("precio", precio.getSelectedItem().toString());
                 oLine.setProperty("presentacion", presentacion.getSelectedItem().toString());
                 oLine.setProperty("piezas",Formats.INT.formatValue(oLine.getMultiply()*oLine.getUnidades()));
                 oLine.setProperty("importe",oLine.printValue());
